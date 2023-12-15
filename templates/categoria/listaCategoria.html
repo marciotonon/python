@@ -1,0 +1,76 @@
+<!-- templates/produtos.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/css/main.css">
+    <title>index</title>
+  </head>
+<body>
+    {% include 'header.html' %}
+    <section class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto flex items-center md:flex-row flex-col">
+            <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
+              <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">Lista de Categorias</h1>
+            </div>
+            <div class="flex md:ml-auto md:mr-0 mx-auto items-center flex-shrink-0 space-x-4">
+                <form action="{{ url_for('rotas_app.new_categoria') }}" >
+                    <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Nova Categoria</button>
+                </form>
+            </div>
+          </div>
+          <div class="lg:w-2/3 w-full mx-auto overflow-auto">
+            <table class="table-auto w-full text-left whitespace-no-wrap">
+              <thead>
+                <tr class="border">
+                  <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">Nome da Categoria</th>
+                  <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Descrição</th>
+                  <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+                {% for categoria in categorias %}
+                    <tr class="border">
+                        <td class="border-t-2 border-gray-200 px-4 py-3">{{ categoria.nome }}</td>
+                        <td class="border-t-2 border-gray-200 px-4 py-3">{{ categoria.descricao }}</td>
+                        <td class="border-t-2 border-gray-200 w-10 text-center">
+                          <form method="post" action="{{ url_for('rotas_app.delete_categoria', categoria_id=categoria.id) }}" onsubmit="return confirm('Tem certeza que deseja excluir a categoria?');">
+                            <input type="hidden" name="categoria_id" value="{{ categoria.id }}">
+                            <button type="submit" class="text-indigo-500">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M5.25003 5.24609L6.18753 20.2461C6.23206 21.1128 6.86253 21.7461 7.68753 21.7461H16.3125C17.1408 21.7461 17.7596 21.1128 17.8125 20.2461L18.75 5.24609" stroke="#105A3D" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3.75011 5.24609H20.2501H3.75011Z" fill="#105A3D"/>
+                                <path d="M3.75011 5.24609H20.2501" stroke="#105A3D" stroke-width="1" stroke-miterlimit="10" stroke-linecap="round"/>
+                                <path d="M15.3751 8.24903L15.0001 18.749M9.00008 5.24903V3.37403C8.99964 3.22617 9.02845 3.07968 9.08483 2.943C9.14121 2.80631 9.22406 2.68212 9.32862 2.57757C9.43317 2.47302 9.55736 2.39016 9.69405 2.33378C9.83073 2.2774 9.97722 2.2486 10.1251 2.24903H13.8751C14.0229 2.2486 14.1694 2.2774 14.3061 2.33378C14.4428 2.39016 14.567 2.47302 14.6715 2.57757C14.7761 2.68212 14.8589 2.80631 14.9153 2.943C14.9717 3.07968 15.0005 3.22617 15.0001 3.37403V5.24903H9.00008ZM12.0001 8.24903V18.749V8.24903ZM8.62508 8.24903L9.00008 18.749L8.62508 8.24903Z" stroke="#105A3D" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </button>
+                        </form>
+                        
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            
+            </table>
+          </div>
+          <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+            <a href="/" class="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">Voltar à Home
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+      </section>
+      {% include 'footer.html' %}
+</body>
+</html>
