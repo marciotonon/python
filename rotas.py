@@ -72,7 +72,7 @@ def logout():
 def produtos():
     # Configurando a paginação
     page = request.args.get('page', 1, type=int)
-    per_page = 4  # Defina o número desejado de itens por página
+    per_page = 6  # Defina o número desejado de itens por página
 
     # Obtendo a lista de produtos paginada
     produtos_paginados = Produto.query.filter_by(usuario=current_user).paginate(page=page, per_page=per_page, error_out=False)
@@ -189,3 +189,12 @@ def cadastrar_categoria():
 def contar_usuarios():
     total_usuarios = Usuario.query.count()
     return render_template('statistic.html', total_usuarios=total_usuarios)
+
+# Rota dashboard (protegida por login)
+@rotas_app.route('/admin/dashboard')
+@login_required
+def admin():
+    total_usuarios = Usuario.query.count()
+    total_categorias = Categoria.query.count()
+    total_produtos = Produto.query.count()
+    return render_template('backend/dashboard.html', usuario=current_user)
