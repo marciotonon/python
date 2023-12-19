@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head.html' %}
+<body x-data="{ open: false }">
+    {% include 'header.html' %}
+    {% include 'mensagem.html' %}
+    <section class="text-gray-600 body-font">
+        <div class="container px-5 py-24 mx-auto">
+            <div class="container px-5 py-24 mx-auto">
+                <div class="flex flex-wrap -m-4">
+                    {% if produtos %}
+                    {% for produto in produtos %}
+                    <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
+                        <a href="#" class="block relative h-48 rounded overflow-hidden">
+                            <img alt="{{ produto.nome }}" class="object-cover object-center w-full h-full block" src="https://dummyimage.com/420x260">
+                        </a>
+                        <div class="mt-4">
+                            <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">{{ produto.categoria.nome }}</h3>
+                            <h2 class="text-gray-900 title-font text-lg font-medium">{{ produto.nome }}</h2>
+                            <p class="mt-1">${{ produto.preco }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                        <p>Nenhum produto cadastrado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+      {% include 'newsletter.html' %}
+      {% include 'footer.html' %}
+      <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+</body>
+</html>
