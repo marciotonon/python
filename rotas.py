@@ -244,3 +244,29 @@ def cadastrar_tamanho():
         flash('Produto não encontrado.', 'error')
 
     return redirect(url_for('rotas_app.tamanhos'))
+
+
+
+
+#
+#
+# selects da loja e produtos
+@rotas_app.route('/dashboard')
+@login_required
+def listar_produtos():
+    # Obtendo a lista de todos os produtos ordenados por categoria
+    todos_produtos = Produto.query.order_by(Produto.categoria_id).all()
+
+    # Agrupando os produtos por categoria usando um dicionário
+    produtos_por_categoria = {}
+    for produto in todos_produtos:
+        categoria_id = produto.categoria_id
+        produtos_por_categoria.setdefault(categoria_id, []).append(produto)
+
+    # Ordenando as categorias por ID
+    categorias_ordenadas = sorted(produtos_por_categoria.keys())
+
+    # Obtendo a lista final de produtos ordenados por categoria
+    produtos_ordenados = [produto for categoria_id in categorias_ordenadas for produto in produtos_por_categoria[categoria_id]]
+
+    return render_template('loja/home.html', produtos=produtos_ordenados)
