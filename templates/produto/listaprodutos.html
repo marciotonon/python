@@ -9,16 +9,23 @@
 <body>
     {% include 'header.html' %}
     <section class="text-gray-600 body-font">
-        <div class="container px-5 py-24 mx-auto flex items-center md:flex-row flex-col">
-            <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 w-full md:w-auto md:text-left text-center">
-              <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">Lista de Produtos</h1>
-            </div>
-            <div class="flex md:ml-auto md:mr-0 mx-auto items-center flex-shrink-0 space-x-4">
-                <form action="{{ url_for('rotas_app.new_produto') }}" >
-                    <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Novo Produto</button>
-                </form>
-            </div>
-          </div>
+      
+      <div class="container mx-auto flex items-center justify-between md:flex-row flex-col px-5 py-24">
+        <div class="flex flex-col md:pr-10 md:mb-0 mb-6 pr-0 md:w-auto w-full md:text-left text-center">
+            <h1 class="md:text-3xl text-2xl font-medium title-font text-gray-900">Lista de Produtos</h1>
+        </div>
+        <div class="lg:w-2/3 w-full mx-auto overflow-auto flex justify-center md:justify-end">
+            <form action="{{ url_for('rotas_app.new_produto') }}" >
+                <button type="submit" class="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-dashed hover:bg-indigo-600 rounded text-lg">Novo Produto</button>
+            </form>
+            -
+            <form action="{{ url_for('rotas_app.new_tamanho') }}" >
+                <button type="submit" class="ml-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-dashed hover:bg-indigo-600 rounded text-lg">Nova Numeração</button>
+            </form>
+        </div>
+    </div>
+    
+        
           <div class="lg:w-2/3 w-full mx-auto overflow-auto">
             <table class="table-auto w-full text-left whitespace-no-wrap">
               <thead>

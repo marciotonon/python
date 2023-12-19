@@ -9,7 +9,7 @@ import os
 
 app = Flask(__name__)
 app.register_blueprint(rotas_app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios1.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tosimsistemas.db'
 app.config['SECRET_KEY'] = 'DeuséFieloTempoTodo'
 db.init_app(app)
 login_manager = LoginManager(app)

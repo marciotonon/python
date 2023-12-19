@@ -1,12 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, Blueprint
+from flask import Flask, render_template, request, redirect, url_for, flash, Blueprint, send_from_directory
 from flask_login import login_user, login_required, logout_user, current_user
-from classes import db, Usuario, Categoria, Produto
+from classes import db, Usuario, Categoria, Produto, Tamanho
 from flask_paginate import Pagination, get_page_args
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 rotas_app = Blueprint('rotas_app', __name__, template_folder='templates', static_folder='static')
 
 PRODUTOS_POR_PAGINA = 4
+
+@rotas_app.route('/templates/backend/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('templates/backend', filename)
 
 @rotas_app.route('/new')
 def new():
@@ -24,7 +28,7 @@ def cadastrar():
     db.session.add(novo_usuario)
     db.session.commit()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('rotas_app.index'))
 
 @rotas_app.route('/')
 def index():
@@ -109,6 +113,7 @@ def delete_produto(produto_id):
 def cadastrar_produto():
     nome = request.form['nome']
     preco = request.form['preco']
+    descricao = request.form['descricao']
     categoria_id = request.form['categoria']  # Obtém a categoria selecionada
 
     # Obtém a categoria pelo ID
@@ -116,7 +121,7 @@ def cadastrar_produto():
     usuario = current_user
 
     if categoria:
-        novo_produto = Produto(nome=nome, preco=preco, categoria=categoria, usuario=usuario)
+        novo_produto = Produto(nome=nome, preco=preco, descricao=descricao, categoria=categoria, usuario=usuario)
         db.session.add(novo_produto)
         db.session.commit()
 
@@ -198,3 +203,44 @@ def admin():
     total_categorias = Categoria.query.count()
     total_produtos = Produto.query.count()
     return render_template('backend/dashboard.html', usuario=current_user)
+
+#Tamanho e quantidade
+@rotas_app.route('/listatamanho')
+@login_required
+def tamanhos():
+    # Configurando a paginação
+    page = request.args.get('page', 1, type=int)
+    per_page = 6  # Defina o número desejado de itens por página
+
+    # Obtendo a lista de produtos paginada
+    tamanhos_paginados = Tamanho.query.filter_by(usuario=current_user).paginate(page=page, per_page=per_page, error_out=False)
+
+    return render_template('tamanho/listatamanho.html', tamanhos_paginados=tamanhos_paginados)
+
+@rotas_app.route('/new_tamanho')
+@login_required
+def new_tamanho():
+    produtos = Produto.query.filter_by(usuario=current_user)
+    return render_template('tamanho/cadastrar_tamanho.html', produtos=produtos)
+
+@rotas_app.route('/cadastrar_tamanho', methods=['POST'])
+@login_required
+def cadastrar_tamanho():
+    tamanho = request.form['tamanho']
+    quantidade = request.form['quantidade']
+    produto_id = request.form['produto']  # Obtém a categoria selecionada
+
+    # Obtém a categoria pelo ID
+    produto = Produto.query.get(produto_id)
+    usuario = current_user
+
+    if produto:
+        novo_produto = Tamanho(produto=produto, usuario=usuario, quantidade=quantidade,tamanho=tamanho)
+        db.session.add(novo_produto)
+        db.session.commit()
+
+        flash('Tamanho cadastrado com sucesso.', 'success')
+    else:
+        flash('Produto não encontrado.', 'error')
+
+    return redirect(url_for('rotas_app.tamanhos'))
