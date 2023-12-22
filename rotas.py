@@ -8,6 +8,14 @@ rotas_app = Blueprint('rotas_app', __name__, template_folder='templates', static
 
 PRODUTOS_POR_PAGINA = 4
 
+@rotas_app.route('/backend/dashboard')
+@login_required
+def dashboardAdmin():
+    total_usuarios = Usuario.query.count()
+    total_categorias = Categoria.query.count()
+    total_produtos = Produto.query.count()
+    return render_template('backend/dashboard.html', usuario=current_user, total_usuarios=total_usuarios, total_categorias=total_categorias, total_produtos=total_produtos)
+
 @rotas_app.route('/templates/backend/<path:filename>')
 def serve_static(filename):
     return send_from_directory('templates/backend', filename)
@@ -47,7 +55,7 @@ def dashboard():
     total_usuarios = Usuario.query.count()
     total_categorias = Categoria.query.count()
     total_produtos = Produto.query.count()
-    return render_template('home.html', usuario=current_user, total_usuarios=total_usuarios, total_categorias=total_categorias, total_produtos=total_produtos)
+    return render_template('backend/dashboard.html', usuario=current_user, total_usuarios=total_usuarios, total_categorias=total_categorias, total_produtos=total_produtos)
 
 
 # Rota de login
@@ -158,9 +166,16 @@ def delete_categoria(categoria_id):
 
 
 # Suas rotas categoria existentes
-@rotas_app.route('/listacategoria')
+@rotas_app.route('/listacategorias')
 @login_required
 def categorias():
+    categorias = Categoria.query.filter_by(usuario=current_user).all()
+    return render_template('categoria/listaCategoria.html', categorias=categorias)
+
+# Suas rotas categoria existentes
+@rotas_app.route('/listacategoria')
+@login_required
+def listacategoria():
     categorias = Categoria.query.filter_by(usuario=current_user).all()
     return render_template('categoria/listaCategoria.html', categorias=categorias)
 
